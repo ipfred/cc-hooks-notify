@@ -1,0 +1,41 @@
+# Python build artifacts
+dist/
+build/
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+
+# Caches
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.claude/settings.local.json
+
+# Temporary files
+*.tmp
+*.log
+*.bak
+*.backup
+*~
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Development artifacts
+.coverage
+htmlcov/
+.tox/
+.venv/
+venv/
+env/
+.venv-ccn-test/
+
+logs/
+other_obj/

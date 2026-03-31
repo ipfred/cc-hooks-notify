@@ -1,0 +1,14 @@
+[project]
+name = "cc-hooks-notify"
+version = "0.1.0"
+description = "轻量级 Claude Code 通知 Hooks，支持钉钉和飞书"
+requires-python = ">=3.9"
+dependencies = [
+    "pyyaml>=6.0",
+    "requests>=2.28.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]

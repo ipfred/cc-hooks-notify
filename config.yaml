@@ -1,0 +1,30 @@
+# cc-hooks-notify 配置文件
+# 修改此文件即可切换通知渠道和样式，settings.json 保持固定
+
+# 日志级别: DEBUG, INFO, WARN, ERROR
+log_level: INFO
+
+# 通知渠道配置
+channels:
+  dingtalk:
+    enabled: true
+    webhook: "https://oapi.dingtalk.com/robot/send?access_token=a94dd07767e608afd83f43fe8e987314409668d9b1f887b7d47fe2e59c91411f"
+    secret: ""                    # 可选：钉钉安全设置的加签密钥
+    markdown: true                # false 则使用纯文本发送（解决部分乱码问题）
+
+  feishu:
+    enabled: true
+    webhook: "https://open.feishu.cn/open-apis/bot/v2/hook/1a38e81f-f517-4b4a-ac5b-11b197537a1a"
+    secret: ""                    # 可选：飞书安全设置的加签密钥
+    card: true                    # false 则使用纯文本发送
+
+# 事件级别配置（可选）
+# 若未指定 channels，则默认使用所有 enabled=true 的渠道
+events:
+  notification:
+    # 示例：仅钉钉接收通知
+    channels: ["feishu"]
+
+  stop:
+    # 示例：仅飞书接收完成通知
+    channels: ["feishu"]
