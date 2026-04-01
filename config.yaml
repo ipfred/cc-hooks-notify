@@ -4,6 +4,9 @@
 # 日志级别: DEBUG, INFO, WARN, ERROR
 log_level: INFO
 
+# 日志目录（可选，默认项目根目录下的 logs/）
+# log_dir: "E:\\my_work\\github_pro\\cc-hooks-notify\\cc_hooks_notify\\logs2"
+
 # 通知渠道配置
 channels:
   dingtalk:

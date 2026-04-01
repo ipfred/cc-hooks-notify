@@ -12,15 +12,22 @@ from channels import get_channel, list_channels
 from config import load_config
 from parser import get_project_name, get_message_preview
 
+# 日志目录: 项目根目录/logs
+PROJECT_ROOT = os.path.dirname((os.path.abspath(__file__)))
+
+
 logger = logging.getLogger("cc_hooks_notify")
 
-# 日志目录: 项目根目录/logs
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
+
+def _get_default_log_dir() -> str:
+    return os.path.join(PROJECT_ROOT, "logs")
 
 
-def setup_logging(level: str = "INFO") -> None:
-    """初始化日志：输出到控制台并按天轮转到 logs 目录."""
+def setup_logging(level: str = "INFO", log_dir: str | None = None) -> None:
+    """初始化日志：输出到控制台并按天轮转到日志目录.
+
+    log_dir: 日志目录路径，默认使用配置中的 log_dir；未配置时自动使用项目根目录下的 logs/
+    """
     log_level = getattr(logging, level.upper(), logging.INFO)
     logger.setLevel(log_level)
 
@@ -28,11 +35,14 @@ def setup_logging(level: str = "INFO") -> None:
     if logger.handlers:
         return
 
-    os.makedirs(LOG_DIR, exist_ok=True)
+    if log_dir is None:
+        log_dir = _get_default_log_dir()
+    os.makedirs(log_dir, exist_ok=True)
+    print(log_dir)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     # 按天轮转的日志文件，保留最近 7 天
-    log_file = os.path.join(LOG_DIR, "cc-hooks-notify.log")
+    log_file = os.path.join(log_dir, "cc-hooks-notify.log")
     file_handler = TimedRotatingFileHandler(
         log_file, when="midnight", interval=1, backupCount=7, encoding="utf-8"
     )
@@ -94,7 +104,8 @@ def notify(event_type: str, parsed: Dict[str, Any], config: Dict[str, Any] | Non
         config = load_config()
 
     log_level = config.get("log_level", "INFO")
-    setup_logging(log_level)
+    log_dir = config.get("log_dir")
+    setup_logging(log_level, log_dir)
     logger.info(f"input= {parsed}")
     data = build_notification_data(event_type, parsed)
 

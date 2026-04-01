@@ -1,12 +1,16 @@
 import sys
 import json
+import os
 import urllib.request
 import urllib.error
 import logging
 from datetime import datetime
 
 # 1. 配置 logging 模块
-LOG_FILE = '/e/my_work/github_pro/cc-hooks-notify/claude-hook-debug.log'
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.join(PROJECT_ROOT, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+LOG_FILE = os.path.join(LOG_DIR, 'claude-hook-debug.log')
 
 logging.basicConfig(
     level=logging.DEBUG,
