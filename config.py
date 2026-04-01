@@ -26,13 +26,14 @@ def load_config(path: str | None = None) -> Dict[str, Any]:
         pkg_dir = os.path.dirname(os.path.abspath(__file__))
         candidates = [
             os.path.join(os.getcwd(), "config.yaml"),
-            os.path.join(pkg_dir, "..", "config.yaml"),
+            os.path.join(pkg_dir, "config.yaml"),
             os.path.expanduser("~/.cc-hooks-notify/config.yaml"),
         ]
     else:
         candidates = [path]
 
     for p in candidates:
+        print(p)
         real_path = os.path.abspath(p)
         if os.path.exists(real_path):
             if not HAS_YAML:

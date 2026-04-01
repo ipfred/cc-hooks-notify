@@ -42,31 +42,32 @@ pip install -r requirements.txt
 将以下配置写入项目根目录的 `.claude/settings.json`（或全局 `~/.claude/settings.json`）：
 
 ```json
-{
-  "hooks": {
-    "Notification": [
+"hooks": {
+    "TaskCompleted": [
       {
-        "matcher": "idle_prompt|permission_prompt",
         "hooks": [
-          {
-            "type": "command",
-            "command": "python /absolute/path/to/cc-hooks-notify/notify.py"
-          }
+          { "type": "command", "timeout": 10, "async": true,
+            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
         ]
       }
     ],
     "Stop": [
       {
         "hooks": [
-          {
-            "type": "command",
-            "command": "python /absolute/path/to/cc-hooks-notify/complete.py"
-          }
+          { "type": "command", "timeout": 10, "async": true,
+            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          { "type": "command", "timeout": 10, "async": true,
+            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
         ]
       }
     ]
-  }
-}
+  },
 ```
 
 > 请把 `python /absolute/path/to/cc-hooks-notify/notify.py` 替换为实际绝对路径。
@@ -124,3 +125,9 @@ CHANNEL_REGISTRY = {
 ## License
 
 MIT
+
+
+后续工作计划
+1. 开发一个plugin的形式安装
+2. 更灵活的配置使用方式
+3. 支持更新的方式
