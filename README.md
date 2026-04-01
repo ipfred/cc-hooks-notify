@@ -12,20 +12,24 @@
 ## 目录结构
 
 ```
-cc-hooks-notify/
+.
 ├── cc_hooks_notify/
 │   ├── channels/          # 通知渠道
 │   │   ├── base.py        # 抽象基类
 │   │   ├── dingtalk.py    # 钉钉
 │   │   ├── feishu.py      # 飞书
 │   │   └── __init__.py    # 渠道注册
-│   ├── config.py          # 配置加载
+│   ├── main.py            # 统一入口（Notification / Stop 等 hook）
+│   ├── complete.py        # Stop Hook 入口
 │   ├── notifier.py        # 核心通知逻辑
-│   └── parser.py          # Claude Code JSON 解析
-├── notify.py              # Notification Hook 入口
-├── complete.py            # Stop Hook 入口
-├── config.yaml            # 用户配置文件
-└── requirements.txt
+│   ├── parser.py          # Claude Code JSON 解析
+│   ├── config.py          # 配置加载
+│   └── config.yaml        # 用户配置文件
+├── test/
+│   └── ding-notify.py     # 钉钉调试脚本
+├── requirements.txt
+├── pyproject.toml
+└── logs/                  # 日志目录（自动创建）
 ```
 
 ## 快速开始
@@ -33,13 +37,15 @@ cc-hooks-notify/
 ### 1. 安装依赖
 
 ```bash
-cd cc-hooks-notify
 pip install -r requirements.txt
 ```
 
 ### 2. 配置 Claude Code settings.json
 
 将以下配置写入项目根目录的 `.claude/settings.json`（或全局 `~/.claude/settings.json`）：
+
+> 因为windows系统 claude 使用的 gitbash 路径写成样例中的那样
+> 
 
 ```json
 "hooks": {
@@ -74,9 +80,14 @@ pip install -r requirements.txt
 
 ### 3. 修改项目配置
 
-编辑 `cc-hooks-notify/config.yaml`：
+编辑 `config.yaml`：
 
 ```yaml
+# 日志配置
+log_level: INFO                     # DEBUG | INFO | WARN | ERROR
+# log_dir: "/path/to/custom/logs"  # 可选，默认项目根目录下的 logs/
+
+# 通知渠道
 channels:
   dingtalk:
     enabled: true
@@ -88,6 +99,8 @@ channels:
     webhook: "https://open.feishu.cn/open-apis/bot/v2/hook/xxx"
     secret: ""
 ```
+
+> `log_dir` 取消注释后替换为自定义路径即可，日志会按天轮转、保留最近 7 天。
 
 重启 Claude Code 即可生效。
 
@@ -125,9 +138,3 @@ CHANNEL_REGISTRY = {
 ## License
 
 MIT
-
-
-后续工作计划
-1. 开发一个plugin的形式安装
-2. 更灵活的配置使用方式
-3. 支持更新的方式
