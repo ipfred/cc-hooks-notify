@@ -24,7 +24,8 @@
 │   ├── notifier.py        # 核心通知逻辑
 │   ├── parser.py          # Claude Code JSON 解析
 │   ├── config.py          # 配置加载
-│   └── config.yaml        # 用户配置文件
+│   └── config.yaml.example # 用户配置模板（复制为 config.yaml 使用）
+├── config.yaml.example    # 配置模板（不会被跟踪）
 ├── test/
 │   └── ding-notify.py     # 钉钉调试脚本
 ├── requirements.txt
@@ -78,7 +79,15 @@ pip install -r requirements.txt
 
 > 请把 `python /absolute/path/to/cc-hooks-notify/notify.py` 替换为实际绝对路径。
 
-### 3. 修改项目配置
+### 3. 生成配置文件
+
+根据模板 `config.yaml.example` 生成配置文件：
+
+```bash
+cp config.yaml.example config.yaml
+```
+
+> **注意**：`config.yaml.example` 是配置模板，已提交到版本控制。`config.yaml` 是实际使用的配置文件，包含敏感信息（如 webhook token），已被 `.gitignore` 忽略，不会提交到仓库。
 
 编辑 `config.yaml`：
 
