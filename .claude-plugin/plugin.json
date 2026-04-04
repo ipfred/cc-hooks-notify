@@ -1,0 +1,45 @@
+{
+  "name": "cc-hooks-notify",
+  "version": "0.3.2",
+  "description": "Claude Code 通知插件，支持钉钉和飞书，任务完成/停止时自动推送消息",
+  "author": {
+    "name": "fred"
+  },
+  "license": "MIT",
+  "keywords": ["notification", "dingtalk", "feishu", "hooks", "webhook", "claude-code"],
+  "repository": "https://github.com/fred/cc-hooks-notify",
+  "userConfig": {
+    "dingtalk_enabled": {
+      "type": "boolean",
+      "title": "启用钉钉通知",
+      "description": "是否启用钉钉消息推送",
+      "default": false
+    },
+    "dingtalk_webhook": {
+      "type": "string",
+      "title": "钉钉 Webhook URL",
+      "description": "钉钉机器人的 Webhook 地址"
+    },
+    "dingtalk_secret": {
+      "type": "string",
+      "title": "钉钉签名密钥",
+      "description": "钉钉机器人的加签密钥（可选）"
+    },
+    "feishu_enabled": {
+      "type": "boolean",
+      "title": "启用飞书通知",
+      "description": "是否启用飞书消息推送",
+      "default": false
+    },
+    "feishu_webhook": {
+      "type": "string",
+      "title": "飞书 Webhook URL",
+      "description": "飞书机器人的 Webhook 地址"
+    },
+    "feishu_secret": {
+      "type": "string",
+      "title": "飞书签名密钥",
+      "description": "飞书机器人的加签密钥（可选）"
+    }
+  }
+}

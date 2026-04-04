@@ -1,0 +1,13 @@
+{
+  "name": "local-plugins",
+  "owner": {
+    "name": "fred"
+  },
+  "plugins": [
+    {
+      "name": "cc-hooks-notify",
+      "source": "./",
+      "description": "Claude Code 通知插件，支持钉钉和飞书"
+    }
+  ]
+}
