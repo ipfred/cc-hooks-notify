@@ -60,7 +60,7 @@
 git clone https://github.com/ipfred/cc-hooks-notify.git
 cd cc-hooks-notify
 # 手动编辑配置文件
-cp config.yaml.example config.yaml
+cp config-example.json config.json
 ```
 ![alt text](test/image.png)
 2. 配置 `.claude/settings.json`
@@ -198,7 +198,7 @@ tail -f logs/cc_hooks_notify.log
    - 查看日志是否有错误
 
 2. **插件加载失败**
-   - 确保已安装 `python3` 环境和安装 `pyyaml`包
+   - 确保已安装 `python3` 环境
    - 运行 `/reload-plugins` 重新加载
 
 ---

@@ -1,0 +1,55 @@
+{
+  "schema": {
+    "log_level": "日志级别，可选: DEBUG / INFO / WARN / ERROR",
+    "log_dir": "日志目录（可选）。未配置时默认使用项目根目录下的 logs/",
+    "channels": {
+      "dingtalk": {
+        "enabled": "是否启用钉钉通知",
+        "webhook": "钉钉机器人 Webhook 地址",
+        "secret": "钉钉加签密钥，可为空",
+        "markdown": "true=Markdown 发送，false=纯文本发送"
+      },
+      "feishu": {
+        "enabled": "是否启用飞书通知",
+        "webhook": "飞书机器人 Webhook 地址",
+        "secret": "飞书签名密钥，可为空",
+        "card": "true=卡片消息，false=纯文本消息"
+      }
+    },
+    "events": {
+      "notification": {
+        "channels": "通知事件使用的渠道列表，例如 [\"dingtalk\"]"
+      },
+      "stop": {
+        "channels": "停止事件使用的渠道列表，例如 [\"feishu\"]"
+      }
+    }
+  },
+  "log_level": "INFO",
+  "channels": {
+    "dingtalk": {
+      "enabled": false,
+      "webhook": "https://oapi.dingtalk.com/robot/send?access_token=YOUR_TOKEN",
+      "secret": "",
+      "markdown": true
+    },
+    "feishu": {
+      "enabled": false,
+      "webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/YOUR_HOOK",
+      "secret": "",
+      "card": true
+    }
+  },
+  "events": {
+    "notification": {
+      "channels": [
+        "dingtalk"
+      ]
+    },
+    "stop": {
+      "channels": [
+        "feishu"
+      ]
+    }
+  }
+}
