@@ -7,7 +7,7 @@
 - **Plugin 模式**：支持 Claude Code Plugin 标准，一条命令安装
 - **可视化配置**：通过插件设置界面直接配置 webhook，无需编辑配置文件
 - **多事件支持**：支持 Stop、Notification、TaskCompleted 等事件
-- **渠道可扩展**：基于抽象基类，新增渠道只需继承 `BaseChannel`
+- **配置简单**：直接配置使用，没有过多复杂的功能
 
 ## 安装
 
@@ -15,7 +15,7 @@
 
 ```bash
 # 1. 添加 marketplace
-/plugin marketplace add https://github.com/ipfred/cc-hooks-notify
+/plugin marketplace add ipfred/cc-hooks-notify
 
 # 2. 安装插件
 /plugin install cc-hooks-notify@cc-hooks-notify --scope user
@@ -23,36 +23,6 @@
 # 3. 重新加载
 /reload-plugins
 ```
-
-### 方式二：本地开发安装
-
-```bash
-# 1. 克隆仓库
-git clone https://github.com/ipfred/cc-hooks-notify.git
-cd cc-hooks-notify
-
-# 2. 安装依赖
-pip install pyyaml requests
-
-# 3. 添加本地 marketplace
-/plugin marketplace add $(pwd)
-
-# 4. 安装插件
-/plugin install cc-hooks-notify@local-plugins --scope user
-
-# 5. 重新加载
-/reload-plugins
-```
-
-### 方式三：使用 --plugin-dir 测试
-
-无需安装，直接加载：
-
-```bash
-claude --plugin-dir /path/to/cc-hooks-notify
-```
-
-## 配置
 
 ### 通过插件界面配置（推荐）
 
@@ -72,13 +42,63 @@ claude --plugin-dir /path/to/cc-hooks-notify
 **钉钉**：
 1. 打开钉钉群 → 群设置 → 智能群助手 → 添加机器人
 2. 选择「自定义」机器人
-3. 安全设置选择「加签」，复制密钥
+3. 安全设置选择「加签」，复制密钥/ 或设置为关键词 `Claude`
 4. 复制 Webhook 地址
 
 **飞书**：
 1. 打开飞书群 → 设置 → 群机器人 → 添加机器人
 2. 选择「自定义机器人」
 3. 复制 Webhook 地址
+
+### 方式二：本地配置安装
+
+直接在 `.claude/settings.json` 中配置hooks，原理就是触发执行py脚本，最原始的方式感觉最简单
+
+
+1. clone项目 编辑配置
+```bash
+# 1. 克隆仓库
+git clone https://github.com/ipfred/cc-hooks-notify.git
+cd cc-hooks-notify
+# 手动编辑配置文件
+cp config.yaml.example config.yaml
+```
+![alt text](test/image.png)
+2. 配置 `.claude/settings.json`
+
+> 因为windows系统 claude 使用的 gitbash 路径写成样例中的那样
+> 
+
+```json
+"hooks": {
+    "TaskCompleted": [
+      {
+        "hooks": [
+          { "type": "command", "timeout": 10, "async": true,
+            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
+        ]
+      },
+      "matcher": "permission_prompt"
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          { "type": "command", "timeout": 10, "async": true,
+            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          { "type": "command", "timeout": 10, "async": true,
+            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
+        ]
+      }
+    ]
+  },
+```
+
 
 ## 通知事件
 
@@ -111,37 +131,6 @@ cc-hooks-notify/
 └── config.yaml.example    # 配置模板（可选）
 ```
 
-## 扩展渠道
-
-新增渠道只需三步：
-
-1. 在 `channels/` 下新建文件，继承 `BaseChannel`
-2. 实现 `send(self, data)` 方法
-3. 在 `channels/__init__.py` 的 `CHANNEL_REGISTRY` 中注册
-
-示例：
-
-```python
-# channels/wecom.py
-from .base import BaseChannel
-
-class WecomChannel(BaseChannel):
-    def send(self, data):
-        # 实现企业微信发送逻辑
-        return True
-```
-
-```python
-# channels/__init__.py
-from .wecom import WecomChannel
-
-CHANNEL_REGISTRY = {
-    "dingtalk": DingtalkChannel,
-    "feishu": FeishuChannel,
-    "wecom": WecomChannel,
-}
-```
-
 ## 故障排查
 
 查看日志：
@@ -162,8 +151,13 @@ tail -f logs/cc_hooks_notify.log
    - 查看日志是否有错误
 
 2. **插件加载失败**
-   - 确保已安装依赖：`pip install pyyaml requests`
+   - 确保已安装 `python3` 环境
    - 运行 `/reload-plugins` 重新加载
+
+---
+## TODO
+1. 支持codex 开箱即用的配置
+
 
 ## License
 
