@@ -54,7 +54,6 @@
 
 直接在 `.claude/settings.json` 中配置hooks，原理就是触发执行py脚本，最原始的方式感觉最简单
 
-
 1. clone项目 编辑配置
 ```bash
 # 1. 克隆仓库
@@ -67,38 +66,86 @@ cp config.yaml.example config.yaml
 2. 配置 `.claude/settings.json`
 
 > 因为windows系统 claude 使用的 gitbash 路径写成样例中的那样
-> 
 
 ```json
 "hooks": {
-    "TaskCompleted": [
-      {
-        "hooks": [
-          { "type": "command", "timeout": 10, "async": true,
-            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
-        ]
-      },
-      "matcher": "permission_prompt"
-    ],
+  "TaskCompleted": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "timeout": 10,
+          "async": true,
+          "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "timeout": 10,
+          "async": true,
+          "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"
+        }
+      ]
+    }
+  ],
+  "Notification": [
+    {
+      "matcher": "permission_prompt|idle_prompt",
+      "hooks": [
+        {
+          "type": "command",
+          "timeout": 10,
+          "async": true,
+          "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"
+        }
+      ]
+    }
+  ]
+}
+```
+
+### 方式三：Codex Hooks 配置（实验功能）
+
+1. 启用 Codex hooks 特性开关（`~/.codex/config.toml`）：
+
+```toml
+[features]
+codex_hooks = true
+```
+
+1. 在仓库根目录创建 `.codex/hooks.json`：
+
+```json
+{
+  "hooks": {
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "timeout": 10, "async": true,
-            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          { "type": "command", "timeout": 10, "async": true,
-            "command": "python /e/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"}
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/main.py\"",
+            "timeout": 10,
+            "statusMessage": "cc-hooks-notify sending"
+          }
         ]
       }
     ]
-  },
+  }
+}
 ```
 
+3. 保持 `config.yaml`（或插件配置）中的钉钉/飞书 webhook 已正确填写。
+
+说明：
+- Codex 会同时加载 `~/.codex/hooks.json` 和 `<repo>/.codex/hooks.json`，命中的 hooks 会合并执行。
+- 对本项目来说，建议先使用 `Stop` 事件（Codex 当前没有与 Claude `Notification`、`TaskCompleted` 完全一致的事件名）。
+- 根据 Codex 官方文档（2026-04-07），hooks 仍是实验功能，且 Windows 支持暂时关闭。
+- 官方文档：https://developers.openai.com/codex/hooks
 
 ## 通知事件
 
@@ -151,14 +198,10 @@ tail -f logs/cc_hooks_notify.log
    - 查看日志是否有错误
 
 2. **插件加载失败**
-   - 确保已安装 `python3` 环境
+   - 确保已安装 `python3` 环境和安装 `pyyaml`包
    - 运行 `/reload-plugins` 重新加载
 
 ---
-## TODO
-1. 支持codex 开箱即用的配置
-
-
 ## License
 
 MIT
