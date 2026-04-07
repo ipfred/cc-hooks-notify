@@ -145,6 +145,7 @@ codex_hooks = true
 - Codex 会同时加载 `~/.codex/hooks.json` 和 `<repo>/.codex/hooks.json`，命中的 hooks 会合并执行。
 - 对本项目来说，建议先使用 `Stop` 事件（Codex 当前没有与 Claude `Notification`、`TaskCompleted` 完全一致的事件名）。
 - 根据 Codex 官方文档（2026-04-07），hooks 仍是实验功能，且 Windows 支持暂时关闭。
+- 注意 `Stop` hook 的 `stdout`：不能输出普通文本。若 hook 进程以 `0` 退出且有 `stdout`，请确保是合法 JSON（本项目已内置处理）。
 - 官方文档：https://developers.openai.com/codex/hooks
 
 ## 通知事件

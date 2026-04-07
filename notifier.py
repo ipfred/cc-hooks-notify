@@ -38,7 +38,6 @@ def setup_logging(level: str = "INFO", log_dir: str | None = None) -> None:
     if log_dir is None:
         log_dir = _get_default_log_dir()
     os.makedirs(log_dir, exist_ok=True)
-    print(log_dir)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     # 按天轮转的日志文件，保留最近 7 天
