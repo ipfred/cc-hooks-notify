@@ -20,28 +20,30 @@ def load_config_from_env() -> Dict[str, Any]:
 
     环境变量格式: CLAUDE_PLUGIN_OPTION_<KEY>
     例如: CLAUDE_PLUGIN_OPTION_DINGTALK_WEBHOOK
+
+    规则: Webhook 地址非空即视为启用该渠道。
     """
     config = {"channels": {}}
 
     # 前缀 (Claude Code plugin 标准格式)
     prefix = "CLAUDE_PLUGIN_OPTION_"
 
-    # 钉钉配置
-    dingtalk_enabled = os.environ.get(f"{prefix}DINGTALK_ENABLED", "").lower()
-    if dingtalk_enabled in ("true", "1", "yes"):
+    # 钉钉配置: Webhook 非空即启用
+    dingtalk_webhook = os.environ.get(f"{prefix}DINGTALK_WEBHOOK", "").strip()
+    if dingtalk_webhook:
         config["channels"]["dingtalk"] = {
             "enabled": True,
-            "webhook": os.environ.get(f"{prefix}DINGTALK_WEBHOOK", ""),
-            "secret": os.environ.get(f"{prefix}DINGTALK_SECRET", ""),
+            "webhook": dingtalk_webhook,
+            "secret": os.environ.get(f"{prefix}DINGTALK_SECRET", "").strip(),
         }
 
-    # 飞书配置
-    feishu_enabled = os.environ.get(f"{prefix}FEISHU_ENABLED", "").lower()
-    if feishu_enabled in ("true", "1", "yes"):
+    # 飞书配置: Webhook 非空即启用
+    feishu_webhook = os.environ.get(f"{prefix}FEISHU_WEBHOOK", "").strip()
+    if feishu_webhook:
         config["channels"]["feishu"] = {
             "enabled": True,
-            "webhook": os.environ.get(f"{prefix}FEISHU_WEBHOOK", ""),
-            "secret": os.environ.get(f"{prefix}FEISHU_SECRET", ""),
+            "webhook": feishu_webhook,
+            "secret": os.environ.get(f"{prefix}FEISHU_SECRET", "").strip(),
         }
 
     return config
