@@ -110,7 +110,10 @@ def notify(event_type: str, parsed: Dict[str, Any], config: Dict[str, Any] | Non
 
     # 获取要发送的渠道列表
     channels_cfg = config.get("channels", {})
-    default_enabled = [name for name, cfg in channels_cfg.items() if cfg.get("enabled", False)]
+    default_enabled = [
+        name for name, cfg in channels_cfg.items()
+        if cfg.get("enabled", False) or cfg.get("webhook", "").strip()
+    ]
     event_cfg = config.get("events", {}).get(event_type) or {}
     target_channels = event_cfg.get("channels", default_enabled)
 
