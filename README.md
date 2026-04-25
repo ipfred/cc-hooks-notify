@@ -16,6 +16,8 @@
 ```bash
 # 1. 添加 marketplace
 /plugin marketplace add ipfred/cc-hooks-notify
+# 通过本地路径添加
+/plugin marketplace add E:/xxx/cc_hooks_notify  
 
 # 2. 安装插件
 /plugin install cc-hooks-notify@cc-hooks-notify --scope user

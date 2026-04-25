@@ -6,40 +6,35 @@
     "name": "fred"
   },
   "license": "MIT",
-  "keywords": ["notification", "dingtalk", "feishu", "hooks", "webhook", "claude-code"],
+  "keywords": [
+    "notification",
+    "dingtalk",
+    "feishu",
+    "hooks",
+    "webhook",
+    "claude-code"
+  ],
   "repository": "https://github.com/fred/cc-hooks-notify",
   "userConfig": {
-    "dingtalk_enabled": {
-      "type": "boolean",
-      "title": "启用钉钉通知",
-      "description": "是否启用钉钉消息推送",
-      "default": false
-    },
     "dingtalk_webhook": {
       "type": "string",
-      "title": "钉钉 Webhook URL",
-      "description": "钉钉机器人的 Webhook 地址"
+      "title": "钉钉 Webhook",
+      "description": "钉钉机器人的 Webhook 地址，留空则不启用钉钉通知。获取方式见 https://open.dingtalk.com/document/robots/custom-robot-access"
     },
     "dingtalk_secret": {
       "type": "string",
-      "title": "钉钉签名密钥",
-      "description": "钉钉机器人的加签密钥（可选）"
-    },
-    "feishu_enabled": {
-      "type": "boolean",
-      "title": "启用飞书通知",
-      "description": "是否启用飞书消息推送",
-      "default": false
+      "title": "钉钉加签密钥",
+      "description": "钉钉机器人安全设置的加签密钥（可选，未开启加签则留空）"
     },
     "feishu_webhook": {
       "type": "string",
-      "title": "飞书 Webhook URL",
-      "description": "飞书机器人的 Webhook 地址"
+      "title": "飞书 Webhook",
+      "description": "飞书机器人的 Webhook 地址，留空则不启用飞书通知。获取方式见 https://open.feishu.cn/document/client-docs/bot-v3/add-custom-bot"
     },
     "feishu_secret": {
       "type": "string",
       "title": "飞书签名密钥",
-      "description": "飞书机器人的加签密钥（可选）"
+      "description": "飞书机器人安全设置的签名密钥（可选，未开启签名校验则留空）"
     }
   }
 }
