@@ -32,7 +32,9 @@ class BaseChannel(abc.ABC):
         pass
 
     def is_enabled(self) -> bool:
-        return self.config.get("enabled", False)
+        enabled = self.config.get("enabled", False)
+        has_webhook = bool(self.config.get("webhook", "").strip())
+        return enabled or has_webhook
 
     def _http_post(self, url: str, payload: Dict[str, Any], headers: Dict[str, str] | None = None, timeout: int = 10) -> tuple[bool, str]:
         """发送 HTTP POST 请求，优先使用 requests，回退到 urllib.

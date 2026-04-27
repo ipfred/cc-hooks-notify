@@ -22,20 +22,44 @@ ettings.json 配置示例:
 import sys
 import os
 import json
-
+import logging
+from pathlib import PurePath
 # 将项目根目录加入路径，确保可直接运行
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 
 from parser import parse_stdin
-from notifier import notify
+from notifier import notify, setup_logging, load_config
 
+logger = logging.getLogger("cc_hooks_notify")
+
+def init_log_config():
+  config = load_config()
+  log_level = config.get("log_level", "INFO")
+  log_dir = config.get("log_dir")
+  setup_logging(log_level, log_dir)
+  return config
+
+def judge_which_cli(parsed):
+  """通过 transcript_path 判断是哪个终端"""
+  transcript_path = parsed.get("transcript_path")
+  if not transcript_path:
+    return "Claude"
+  parts = PurePath(transcript_path).parts
+  if '.factory' in parts:
+    return 'Droid'
+  if '.codex' in parts:
+    return 'Codex'
+  return "Claude"
 
 def main():
     parsed = parse_stdin()
     # 默认事件类型为 notification，交给 notifier 内部再细化
     # parsed = {'session_id': '216fcdf9-74e0-4ccc-b401-7291a25871e9', 'transcript_path': 'C:\\Users\\admin\\.claude\\projects\\E--my-work-github-pro-cc-hooks-notify\\216fcdf9-74e0-4ccc-b401-7291a25871e9.jsonl', 'cwd': 'E:\\my_work\\github_pro\\cc-hooks-notify', 'permission_mode': 'bypassPermissions', 'hook_event_name': 'Stop', 'stop_hook_active': False, 'last_assistant_message': '所有验证通过！钉钉 payload 包含正确的 UTF-8 字节。\n\n## 总结\n\nstdin 中文乱码问题已修复。改动如下：\n\n### `cc_hooks_notify/parser.py`\n- 新增 `_is_valid_utf8()` 检测有效 UTF-8 字节\n- 新增 `_decode_with_fallback()` 智能解码（优先 UTF-8，自动检测乱码）\n- `parse_stdin()` 现在使用 `sys.stdin.buffer.read()` 读取原始字节，避免 Python 用系统编码（GBK）自动解码\n\n### 关键修复点\n```python\n# 以前：Python 用 gbk 解码，中文变乱码\nraw = sys.stdin.read()  # GBK 解码 → 乱码\n\n# 现在：直接读字节，智能选择编码\nraw_bytes = sys.stdin.buffer.read()\nraw = _decode_with_fallback(raw_bytes)  # UTF-8 优先 → 正确\n```\n\n### 验证结果\n- ✅ `sys.stdin.buffer` 读取原始字节\n- ✅ 正确识别并解码 UTF-8 编码的中文\n- ✅ 日志文件写入正确 UTF-8 字节（无替换字符）\n- ✅ 钉钉 payload JSON 编码正确\n\n控制台显示乱码是 Windows GBK 终端限制，不影响实际数据。钉钉收到的消息中文应该正常显示。如果钉钉仍显示乱码，可能是钉钉客户端的问题，请检查钉钉消息的实际显示效果。'}
-    notify("notification", parsed)
+    cli_prefix = judge_which_cli(parsed)
+    config = init_log_config()
+    logger.info(f"session parsed={parsed}")
+    notify("notification", parsed, config=config, prefix=cli_prefix)
     # Codex Stop hook 在 exit 0 时要求 stdout 为 JSON，返回最小合法对象即可。
     if (
         isinstance(parsed, dict)

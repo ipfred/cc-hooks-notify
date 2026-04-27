@@ -70,17 +70,13 @@ def load_config_from_file(path: str | None = None) -> Dict[str, Any]:
         candidates.extend(
             [
                 os.path.join(os.getcwd(), "config.json"),
-                os.path.join(os.getcwd(), "config.yaml"),
                 os.path.join(pkg_dir, "config.json"),
-                os.path.join(pkg_dir, "config.yaml"),
                 os.path.expanduser("~/.cc-hooks-notify/config.json"),
-                os.path.expanduser("~/.cc-hooks-notify/config.yaml"),
             ]
         )
     else:
         candidates = [path]
 
-    yaml_candidates_without_parser = []
     for p in candidates:
         real_path = os.path.abspath(p)
         if os.path.exists(real_path):
@@ -88,32 +84,6 @@ def load_config_from_file(path: str | None = None) -> Dict[str, Any]:
             if lower_path.endswith(".json"):
                 with open(real_path, "r", encoding="utf-8") as f:
                     return json.load(f) or {}
-
-            if lower_path.endswith((".yaml", ".yml")):
-                if not HAS_YAML:
-                    yaml_candidates_without_parser.append(real_path)
-                    continue
-                with open(real_path, "r", encoding="utf-8") as f:
-                    return yaml.safe_load(f) or {}
-
-            # 未知扩展名：优先按 JSON 解析，失败后尝试 YAML
-            try:
-                with open(real_path, "r", encoding="utf-8") as f:
-                    return json.load(f) or {}
-            except Exception:
-                if not HAS_YAML:
-                    raise RuntimeError(
-                        f"无法解析配置文件: {real_path}。请使用 JSON 格式，或安装 PyYAML: pip install pyyaml"
-                    )
-                with open(real_path, "r", encoding="utf-8") as f:
-                    return yaml.safe_load(f) or {}
-
-    if yaml_candidates_without_parser:
-        raise RuntimeError(
-            "检测到 YAML 配置文件但未安装 PyYAML。"
-            "请改用 config.json（推荐，无第三方依赖）或安装 PyYAML: pip install pyyaml"
-        )
-
     return {}
 
 

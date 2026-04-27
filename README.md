@@ -156,6 +156,39 @@ codex_hooks = true
 - 注意 `Stop` hook 的 `stdout`：不能输出普通文本。若 hook 进程以 `0` 退出且有 `stdout`，请确保是合法 JSON（本项目已内置处理）。
 - 官方文档：https://developers.openai.com/codex/hooks
 
+
+### factory Droid 使用方式
+
+文件 `~/.factory/hooks/hooks.json`
+配置如下
+
+```json
+{
+    "Stop": [
+        {
+            "matcher": "*",
+            "hooks": [
+                {
+                    "type": "command",
+                    "command": "python3 E:/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"
+                }
+            ]
+        }
+    ],
+    "Notification": [
+        {
+            "matcher": "*",
+            "hooks": [
+                {
+                    "type": "command",
+                    "command": "python3 E:/my_work/github_pro/cc-hooks-notify/cc_hooks_notify/main.py"
+                }
+            ]
+        }
+    ],
+    "showHookOutput": false
+}
+```
 ## 通知事件
 
 | 事件 | 触发时机 |

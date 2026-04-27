@@ -49,12 +49,14 @@ def setup_logging(level: str = "INFO", log_dir: str | None = None) -> None:
     logger.addHandler(file_handler)
 
     # 控制台输出
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-    logger.addHandler(console_handler)
+    # console_handler = logging.StreamHandler()
+    # console_handler.setFormatter(formatter)
+    # logger.addHandler(console_handler)
 
 
-def build_notification_data(event_type: str, parsed: Dict[str, Any]) -> Dict[str, Any]:
+def build_notification_data(
+    event_type: str, parsed: Dict[str, Any], prefix: str = "Claude"
+) -> Dict[str, Any]:
     """根据 Claude Code 传入的数据构造统一通知数据."""
     hook_event = parsed.get("hook_event_name", "")
     cwd = parsed.get("cwd", "")
@@ -69,10 +71,10 @@ def build_notification_data(event_type: str, parsed: Dict[str, Any]) -> Dict[str
     preview = get_message_preview(body_source, 100)
 
     titles = {
-        "permission": f"Claude 需要权限确认 | {project}",
-        "idle": f"Claude 正在等待 | {project}",
-        "stop": f"Claude stop | {project}",
-        "notification": f"Claude 通知 | {project}",
+        "permission": f"{prefix} 需要权限确认 | {project}",
+        "idle": f"{prefix} 正在等待 | {project}",
+        "stop": f"{prefix} stop | {project}",
+        "notification": f"{prefix} 通知 | {project}",
     }
 
     # 根据 notification_type 映射事件
@@ -97,16 +99,24 @@ def build_notification_data(event_type: str, parsed: Dict[str, Any]) -> Dict[str
     }
 
 
-def notify(event_type: str, parsed: Dict[str, Any], config: Dict[str, Any] | None = None) -> None:
+def notify(
+    event_type: str,
+    parsed: Dict[str, Any],
+    config: Dict[str, Any] | None = None,
+    prefix: str | None = None,
+) -> None:
     """发送通知的主入口."""
     if config is None:
         config = load_config()
+
+    # 优先级：命令行参数 > 配置文件 > 默认 Claude
+    effective_prefix = prefix or config.get("prefix") or "Claude"
 
     log_level = config.get("log_level", "INFO")
     log_dir = config.get("log_dir")
     setup_logging(log_level, log_dir)
     logger.info(f"input= {parsed}")
-    data = build_notification_data(event_type, parsed)
+    data = build_notification_data(event_type, parsed, prefix=effective_prefix)
 
     # 获取要发送的渠道列表
     channels_cfg = config.get("channels", {})
