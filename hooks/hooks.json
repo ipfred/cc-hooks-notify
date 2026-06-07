@@ -1,15 +1,28 @@
 {
-  "description": "Claude Code 通知 Hooks - 任务完成/停止时推送消息到钉钉或飞书",
+  "description": "通知 Hooks - 任务停止或权限请求时推送消息到钉钉或飞书",
   "hooks": {
     "Notification": [
       {
-        "matcher": "permission_prompt|request_permission",
+        "matcher": "permission_prompt|request_permission|idle_prompt",
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notify.sh",
+            "command": "cc-notify hook claude",
             "timeout": 10,
-            "async": true
+            "statusMessage": "cc-notify sending"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cc-notify hook codex",
+            "timeout": 10,
+            "statusMessage": "cc-notify sending"
           }
         ]
       }
@@ -19,9 +32,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notify.sh",
+            "command": "cc-notify hook claude",
             "timeout": 10,
-            "async": true
+            "statusMessage": "cc-notify sending"
           }
         ]
       }
@@ -31,9 +44,9 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notify.sh",
+            "command": "cc-notify hook claude",
             "timeout": 10,
-            "async": true
+            "statusMessage": "cc-notify sending"
           }
         ]
       }

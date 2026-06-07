@@ -1,0 +1,20 @@
+{
+  "name": "cc-notify-local",
+  "interface": {
+    "displayName": "cc-notify local"
+  },
+  "plugins": [
+    {
+      "name": "cc-notify",
+      "source": {
+        "source": "local",
+        "path": "./plugins/cc-notify"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

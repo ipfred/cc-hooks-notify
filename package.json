@@ -1,0 +1,33 @@
+{
+  "name": "@fredzhang/cc-notify",
+  "version": "0.4.0",
+  "description": "Command line hook notifier for Codex, Claude, and Droid.",
+  "bin": {
+    "cc-notify": "npm/bin/cc-notify.js"
+  },
+  "scripts": {
+    "postinstall": "node npm/scripts/install-binary.js",
+    "build": "go build -o dist/cc-notify ./cmd/cc-notify",
+    "test": "go test ./...",
+    "pack:dry": "npm pack --dry-run"
+  },
+  "files": [
+    "npm/bin/",
+    "npm/scripts/",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ipfred/cc-hooks-notify.git"
+  },
+  "keywords": [
+    "codex",
+    "claude",
+    "hooks",
+    "notification",
+    "dingtalk",
+    "feishu"
+  ],
+  "author": "fred",
+  "license": "MIT"
+}
